@@ -33,6 +33,8 @@ github_username:  jbetz34
 collections:
   authors:
     output: true
+  projects:
+    output: true
 
 # Default layouts
 defaults:

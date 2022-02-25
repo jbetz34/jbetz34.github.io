@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
-title: homepage
+title: Home
 ---
 
 This page is called: {{ page.title }} and it is where I can add content and custom {{ "front matter" | upcase }} to the homepage

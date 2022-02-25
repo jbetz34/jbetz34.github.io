@@ -1,6 +1,8 @@
 ---
 layout: post
+title: my first blog post
 author: james
+categories: blog
 ---
 ### Hello World!
 This is my first blog
