@@ -1,3 +1,7 @@
+---
+layout: post
+author: james
+---
 ### Hello World!
 This is my first blog
 
