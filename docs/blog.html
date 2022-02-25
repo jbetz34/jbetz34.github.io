@@ -6,8 +6,7 @@ title: Blog
 	{% for blog in site.posts %}
 	<li>
 		<h2><a href="{{ blog.url }}"> {{ blog.title }}</a></h2>
-		<h3>{{ proj.author }}</h3>
-		<p>{{ proj.content | markdownify }}</p>
+		<p>{{ blog.content | markdownify }}</p>
 	</li>
 	{% endfor %}
 </ul>

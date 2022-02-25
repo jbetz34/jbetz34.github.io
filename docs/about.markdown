@@ -4,17 +4,20 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+## Hi! 
+  My name is James, I am a software developer with specialization in database engineering. 
+Nearly 4 years ago, during my first job after college, I stumbled into a humble programming
+language called q/kdb+. Although designed for database management and high frequency event
+processing, I enjoy using the language to design applications that would not typically be
+deployed with q/kdb+. 
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+  I hope to use this website to share some of the fun projects/applications that I have built 
+as well as sharing my thoughts on some related, interesting topics. 
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+  All code displayed on this site was written personally during my free time, or borrowed from
+open source repositories. None of the code or ideas expressed on this site are my own and 
+have no influence from current or previous employment. 
 
-
-[jekyll-organization]: https://github.com/jekyll
+Enjoy :)
 
 
