@@ -4,9 +4,9 @@ title: Blog
 ---
 <ul>
 	{% for blog in site.posts %}
-	<li>
 		<h2><a href="{{ blog.url }}"> {{ blog.title }}</a></h2>
-		<p>{{ blog.content | markdownify }}</p>
-	</li>
+		<blockquote>
+		<p>{{ blog.excerpt | markdownify }}</p>
+		</blockquote>
 	{% endfor %}
 </ul>

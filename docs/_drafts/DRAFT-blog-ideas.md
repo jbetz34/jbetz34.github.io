@@ -14,4 +14,15 @@ Potential blog ideas:
 - darts (monte carlo modling)
 - qMatch & matching engines
 - crypto loading
+- crypto etc
 - portfolio manager
+- unicode
+- pyKX
+- KX insights
+- KX on cloud
+- embedded console
+
+Big part of this is figuring out how to host code where users can interact
+- Front end app to all projects? 
+- How will I host code? 
+
