@@ -8,7 +8,11 @@ subtitle: Sticky Nulls
 #### **{{page.subtitle}}**
 
 This concept was originally discovered and tested from the KX website before the redesign. When I am able to find the link to the exerpt that first demonstrated this concept, I will link it here. 
-In q/kdb+ the null value is consistent across most arithmetic operators. Once a null is reached, it is nearly impossible to revert to a previous value. Lets look at the following examples: 
+In q/kdb+ the null value is consistent across most arithmetic operators. Once a null is reached, it is nearly impossible to revert to a previous value. 
+
+<!-- excerpt-end -->
+
+Lets look at the following examples: 
 {% highlight q %}
 q) (0Nj;0Ni;0Nh) + (1j;1i;1h)
 0N

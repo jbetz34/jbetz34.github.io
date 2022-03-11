@@ -6,12 +6,9 @@ layout: home
 title: Home
 ---
 
-This page is called: {{ page.title }} and it is where I can add content and custom {{ "front matter" | upcase }} to the homepage
+## Welcome to my website! 
 
-Here's what I want to do:
-- Create a beautiful/fun landing page
-- Move the posts to a different tab
-- Create a projects tab
-- Find a way to move this onto the Github pages site
- 
+I still haven't figured out exactly what I want to put into this landing page. 
+
+While you are here, checkout my first blog post [here]({% link _posts/2022-03-11-my-first-blog-post.markdown %})!
 
