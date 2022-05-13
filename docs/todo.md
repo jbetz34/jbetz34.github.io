@@ -1,0 +1,3 @@
+- rouge-ruby/rouge -> submit PR for edits to q highlighting (forgetting some keywords/operators)
+- jekyll-pygments-themes -> find a theme you like for the syntax highlighting
+- add more content
