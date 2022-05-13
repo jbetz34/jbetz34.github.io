@@ -1,7 +1,11 @@
 ---
-layout: post
+layout: post 
 title: My First Blog Post
 author: james
+categories: 
+tags: [kdb+/q]
+image: arctic-1.jpg 
+
 ---
 ### Hello World!
 This is my first blog
