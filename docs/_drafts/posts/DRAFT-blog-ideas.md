@@ -13,6 +13,7 @@ Potential blog ideas:
 - unicode
 - crypto etc
 - crypto loading
+- fun stories ( add some personality to the blog )
 
 Potential project ideas:
 - darts (monte carlo modling)
@@ -22,6 +23,7 @@ Potential project ideas:
 - qBlockchain
 - bigMath
 - qWordle
+- mazes
 
 - embedded console
 
