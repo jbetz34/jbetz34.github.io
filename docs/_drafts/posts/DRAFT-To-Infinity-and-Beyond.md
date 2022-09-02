@@ -8,7 +8,7 @@ subtitle: Examining edge case numbers in q/kdb+
 
 #### **{{ page.subtitle }}**
 
-Documentation around how numbered datatypes work in q/kdb+ is very sparse and scattered around the site in various sections. After my own struggles with the upper/lower limits of these datatypes, I have decided to compile some information that I have learned by scouring the KX website or through my own trial & error processes. The three datatypes that we will be exploring are shorts, longs and ints. Floats and reals have been excluded from this post for simplicity. Each of these three datatypes acts similarly when reaching the maximum/minimum limit, unless explicitly stated assume that the described behavior is consistent across each datatype. If you are unfamiliar with kdb+ datatypes, you can read about them from the KX website [here][kx-datatypes]. 
+Titled after one of the footnotes in the KX documentation, this post takes a closer look at the edge case numbers in q/kdb+. After my own struggles with the upper/lower limits of these datatypes, I have decided to compile some information that I have learned by scouring the KX website. The three datatypes that we will be exploring are shorts, longs and ints. Floats and reals have been excluded from this post for simplicity. Each of these three datatypes acts similarly when reaching the maximum/minimum limit, unless explicitly stated assume that the described behavior is consistent across each datatype. If you are unfamiliar with kdb+ datatypes, you can read about them from the KX website [here][kx-datatypes]. 
 
 <!-- excerpt-end -->
 
@@ -16,7 +16,7 @@ Documentation around how numbered datatypes work in q/kdb+ is very sparse and sc
 
 #### Numbers are circular (longs and ints)
 
-Although never explicitly stated in the documentation, this concept was discovered through experimentation and makes sense logically. That is, whole numbers in kdb+ will cycle from 0j to 0Wj to 0Nj to -0Wj and all the way back to 0j. Lets see how that looks in practice:
+Whole numbers in kdb+ will cycle from 0j to 0Wj to 0Nj to -0Wj and all the way back to 0j. Lets see how that looks in practice:
 {% highlight q %}
 maxi:2147483646i            // upper int limit
 mini:-2147483646i            // lower int limit

@@ -2,7 +2,7 @@
 layout: post 
 title: "[Repost] Joy of q: It's snowing again"
 author: james
-categories: 
+categories: projects
 tags: [kdb+/q, JavaScript]
 image: snow-scape.jpg 
 subtitle: Simulating weather in q/kdb+

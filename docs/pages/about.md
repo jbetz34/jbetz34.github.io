@@ -3,5 +3,9 @@ layout: page
 title: About
 permalink: /about
 ---
+Hi, I'm James.
 
-Millennial is a minimalist Jekyll theme. The purpose of this theme is to provide a simple, clean, content-focused publishing platform for your publication site or blog. You can find everything you need to get started under documentation. For more information on how to install and use this theme, check out [the documentation]({{ site.github.url }}).
+I like to use this space to express some of my thoughts and ideas. 
+
+	'"I write to discover what I know." -Flannery O'Connor'
+		- Some random quotes website
