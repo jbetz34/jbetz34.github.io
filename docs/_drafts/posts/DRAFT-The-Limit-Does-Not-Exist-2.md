@@ -67,28 +67,60 @@ vec:{"J"$/:string x}
 
 So we now have our numbers, or more correctly, our lists of numbers. How do we multiply these numbers together? 
 One of the most common methods of multiplication is called partial products. This method multiplies each digit in one number by each other digit in the second number and summing the result. Still confused? Here, watch this video: 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/EupNW_6jPok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p style="text-align:center"><iframe width="560" height="315" src="https://www.youtube.com/embed/EupNW_6jPok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 One important thing to note here, is that in partial products don't consider each digit individually, but rather consider each digit\*10<sup>n</sup> where n is the number of the digit counted from right to left. While we are able to take advantage of the vecorization of one number, the other must be multiplied by 10<sup>n</sup>. If I am making absolutely no sense, let's look at an example:
 {% highlight q %}
-// our two numbers 43 * 67 = 2881
-x:4 3;y:6 7;
+// our two numbers 3 * 121 = 363
+x:3;y:1 2 1;
 
 // multiply each digit by each of the other digits
-x*/:10 1*'y
-240 180  // (4*60) (3*60)
-28 21  // (4*7) (3*7)
+x*/:100 10 1*'y
+300  // (3*100)
+60  // (3*20)
+3  // (3*1)
 
 // sum 
-sum x*/:10 1*'y
-268 201
+sum x*/:100 10 1*'y
+363
 
 // generic partial products code
 sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;
 {% endhighlight %}
 
-Knowing the digits on x will always appear in order, we do not have to worry about multiplying each digit by 10<sup>n</sup>. However, to assign the appropriate weight to each digit on the right hand side we need to multiply by 10<sup>n</sup>. While this may resolve one side of the equation, our y variable is still subject to the same limitation as always. 
+If you are thinking that was a softball question, that's because it was. In truth, I didnt want to dive too fast into harder problems because I need to explain the concept of digit promotion. If you watched the embedded video above, the digit promotion in that video occurs at about 2:10. When the numbers in a column add up to 10 or more, the tens digit gets promoted to the next column. 
 
+Knowing the digits on x will always appear in order, we do not have to worry about multiplying each digit by 10<sup>n</sup>. However, to assign the appropriate weight to each digit on the right hand side we need to multiply by 10<sup>n</sup>. While this may resolve one side of the equation, our y variable is still subject to the same limitation as always. Let's look at an example of that:
+{% highlight q %}
+// our two numbers 3 * 123,123,123,123,123,123,123
+x:3;
+y:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
+
+// correctly weighting our y variable
+100000000000000000000 * 1
+10000000000000000000  * 2
+1000000000000000000   * 3
+100000000000000000    * 1
+10000000000000000     * 2
+1000000000000000      * 3
+100000000000000       * 1
+10000000000000        * 2
+1000000000000         * 3
+100000000000          * 1
+10000000000           * 2
+1000000000            * 3
+100000000             * 1
+10000000              * 2
+1000000               * 3
+100000                * 1
+10000                 * 2
+1000                  * 3
+100                   * 1
+10                    * 2
+1                     * 3
+{% endhighlight %}
+
+We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right n
 
 
 
