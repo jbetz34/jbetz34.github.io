@@ -2,7 +2,8 @@
 layout: post 
 title: A-maze-in' q
 author: james
-categories: 
+date: 2001-01-01 12:00 -00:00
+categories: projects
 tags: [kdb+/q]
 image: garden-maze.jpg 
 subtitle: Programming Mazes in q/kdb+

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Blog Ideas
-date: 2022-02-25 15:33:00 -0500
+date: 2001-02-25 15:33:00 -0500
 author: james
 ---
 <!-- excerpt-end -->

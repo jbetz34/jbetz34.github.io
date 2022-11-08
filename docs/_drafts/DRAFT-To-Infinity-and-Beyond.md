@@ -1,7 +1,7 @@
 ---
 layout: post
 author: james
-date: 2022-02-25 16:21:00 -05:00
+date: 2001-02-25 16:21:00 -05:00
 title: To Infinity and Beyond...
 subtitle: Examining edge case numbers in q/kdb+
 ---

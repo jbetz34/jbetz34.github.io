@@ -1,47 +1,20 @@
 ---
 layout: post
 author: james
-date: 2022-02-25 16:21:00 -05:00
+date: 2022-11-07 16:21:00 -05:00
+image: the-mean-girls-lindsay-lohan.gif
 title: The limit does not exist
 subtitle: Going beyond the native 64bit math in q/kdb+
 ---
+Native math in q/kdb+ is limited by the maximum size of the resultant number's datatype. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint","int64" or "long long", all referring to the same 8 byte numerical datatype. The limit on native numerical calculations q/kdb+ is only 8 bytes of data, that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806.
 
-#### **{{ page.subtitle}}**
-
-The limit on native numerical calculations q/kdb+ is only 8 bytes of data, that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806. 
-
-Pathetic. 
+_Pathetic._
 
 To top it off, Python has a library "BigNumber" that supports numbers with any values and many operations with them. To admit that a bunch of snake-charmers could out perform our far superior language? *shudders* 
-I will not stand idly while python runs laps around us. 
-
-<!-- excerpt-end -->
-
-![the-mean-girls-lindsay-lohan](/assets/images/the-mean-girls-lindsay-lohan.gif)
-
-Native math in q/kdb+ is limited by the maximum size of the number's datatype. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint","int64" or "long long", all referring to the same 8 byte numerical datatype. 
-
-
-INTRO: 
-- Example problem: ‘number error
-- Talk about integers, int32, int64, longs – i.e. their limits
-	C++ version of long is “long long”, 64bit signed. Min/Max numbers specified by 2^63
-- Talk about bignum in python and other languages
-	bignum: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
-- https://code.kx.com/q/basics/math/
-- https://code.kx.com/q/ref/add/
-- https://code.kx.com/q/ref/multiply/
-
-- Talk about the objective/scope (bignum in q, mult,add,pwr, no negatives/fractions)
-
-In mathematics, an integer is any whole number within the range of all negative and positive numbers including zero. It exists as an unbounded set with equal magnitude on both the positive and negative side. In computing, this is not so easy to achieve. On your computer, numbers are stored as binary digits, or bits, and take up space in memory. Since your computer only has so much memory, the number you create can only be so large. For type casted programming languages such as q/kdb+, the size of a number is even more limited. In the case of a long datatype in q/kdb+, a number is limited to 8bytes or 64bits.
-While q/kdb+ is super fast with complex vector calculations, it has its limitations. Mainly, the ability to exceed 9,223,372,036,854,775,806 in either direction. 1 more beyond and you reach negative and positive infinity. 2 more beyond and you reach a null. 3+ more beyond and you will start to loop back down in the opposite direction. It should be noted that nulls are “sticky”, meaning that the null will override any math you intend to perform. 
-The numerical value in q/kdb+ (since V3.0) is a long datatype, a signed 64bit integer. With the first digit representing the sign (positive or negative), that leaves 63 bits to determine the size of the number. The limit can then be calculated as [-263 , 263 -1]
-There are other programming languages that have determined a way around this limitation, such as python. Bignum arithmetic in python allows numbers to expand to any magnitude that can be contained in memory. More information can be found here: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
-The objective of this exploratory paper is to achieve mathematics to a reasonable limit beyond that which is available by default means. If possible, it would be a nice achievement to calculate a googol (10100) or dare I even say, a googolplex (10googol). Not all mathematical operations will be included in this scope, fractions and negative numbers will not be addressed. 
+I will not stand idly by while python runs laps around us. 
 
 If we are the same type of weird you have probably thought to yourself:
-"what is the maximum object size that can be encrypted with the sha-256 hashing algorithm?"
+"What is the maximum object size that can be encrypted with the sha-256 hashing algorithm?"
 and quickly ran to google for the answer. If you're not that weird, then I'll save you the trip to google and just tell you. It's 2<sup>63</sup>-1 bytes.
 Sure, 2<sup>63</sup>-1, but what does that number even look like?
 Let's ask google: 
@@ -58,7 +31,8 @@ If you're thinking, "why not just do it in python?", <a href="https://www.python
 
 Now that it's just us serious programmers, let's talk about what we need to do to bypass this limit. 
 
-First, we need a way to represent numbers larger than ~9 quintillion. While there may be several solutions to representing large numbers in an abstract way, I think the most straightforward and human-readable would be to represent each digit in the number as a single number in a vector of longs. In this way, the maximum numerical value of a long would be represented "9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 6". Great, now in code: 
+First, we need a way to represent numbers larger than ~9 quintillion. While there may be several solutions to representing large numbers in an abstract way, I think the most straightforward and human-readable would be to represent each digit in the number as a single number in a vector of longs. In this way, the maximum numerical value of a long would be represented "9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 6". 
+Great, now in code: 
 {% highlight q %}
 // accepts a number,string or list of numbers
 // converts to list of longs
@@ -69,7 +43,7 @@ So we now have our numbers, or more correctly, our lists of numbers. How do we m
 One of the most common methods of multiplication is called partial products. This method multiplies each digit in one number by each other digit in the second number and summing the result. Still confused? Here, watch this video: 
 <p style="text-align:center"><iframe width="560" height="315" src="https://www.youtube.com/embed/EupNW_6jPok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
-One important thing to note here, is that in partial products don't consider each digit individually, but rather consider each digit\*10<sup>n</sup> where n is the number of the digit counted from right to left. While we are able to take advantage of the vecorization of one number, the other must be multiplied by 10<sup>n</sup>. If I am making absolutely no sense, let's look at an example:
+One important thing to note here, is that in partial products we don't consider each digit individually, but rather consider each digit\*10<sup>n</sup> where n is the index of the digit counted from right to left. Because of this we are able to take advantage of the vecorization of one number, but the other must be multiplied by 10<sup>n</sup>. If I am making absolutely no sense, let's look at an example:
 {% highlight q %}
 // our two numbers 3 * 121 = 363
 x:3;y:1 2 1;
@@ -120,7 +94,32 @@ y:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
 1                     * 3
 {% endhighlight %}
 
-We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right n
+We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. 
+
+
+<!-- USELESS JUNK START -->
+
+INTRO: 
+- Example problem: ‘number error
+- Talk about integers, int32, int64, longs – i.e. their limits
+	C++ version of long is “long long”, 64bit signed. Min/Max numbers specified by 2^63
+- Talk about bignum in python and other languages
+	bignum: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
+- https://code.kx.com/q/basics/math/
+- https://code.kx.com/q/ref/add/
+- https://code.kx.com/q/ref/multiply/
+
+- Talk about the objective/scope (bignum in q, mult,add,pwr, no negatives/fractions)
+
+In mathematics, an integer is any whole number within the range of all negative and positive numbers including zero. It exists as an unbounded set with equal magnitude on both the positive and negative side. In computing, this is not so easy to achieve. On your computer, numbers are stored as binary digits, or bits, and take up space in memory. Since your computer only has so much memory, the number you create can only be so large. For type casted programming languages such as q/kdb+, the size of a number is even more limited. In the case of a long datatype in q/kdb+, a number is limited to 8bytes or 64bits.
+While q/kdb+ is super fast with complex vector calculations, it has its limitations. Mainly, the ability to exceed 9,223,372,036,854,775,806 in either direction. 1 more beyond and you reach negative and positive infinity. 2 more beyond and you reach a null. 3+ more beyond and you will start to loop back down in the opposite direction. It should be noted that nulls are “sticky”, meaning that the null will override any math you intend to perform. 
+The numerical value in q/kdb+ (since V3.0) is a long datatype, a signed 64bit integer. With the first digit representing the sign (positive or negative), that leaves 63 bits to determine the size of the number. The limit can then be calculated as [-263 , 263 -1]
+There are other programming languages that have determined a way around this limitation, such as python. Bignum arithmetic in python allows numbers to expand to any magnitude that can be contained in memory. More information can be found here: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
+The objective of this exploratory paper is to achieve mathematics to a reasonable limit beyond that which is available by default means. If possible, it would be a nice achievement to calculate a googol (10100) or dare I even say, a googolplex (10googol). Not all mathematical operations will be included in this scope, fractions and negative numbers will not be addressed. 
+
+<!-- USELESS JUNK END -->
+
+I
 
 
 

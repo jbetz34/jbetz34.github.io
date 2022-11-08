@@ -2,11 +2,12 @@
 layout: post 
 title: My First Blog Post
 author: james
-categories: 
+date: 2001-01-01 01:00:00 -00:00
+categories: posts
 tags: [kdb+/q]
 image: arctic-1.jpg 
+subtitle: Hello World!
 ---
-### Hello World!
 This is my first blog
 
 <!-- excerpt-end -->

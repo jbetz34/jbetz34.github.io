@@ -11,9 +11,12 @@ layout: default
   {% endif %}
   {% if page.image %}
     <div class="featured-image">
-      <img src="{{ site.github.url }}/assets/img/{{ page.image }}">
+      <img width=100% height=auto src="{{ site.github.url }}/assets/img/{{ page.image }}">
     </div>
   {% endif %}
+  <h3>
+    {{ page.subtitle}}
+  </h3>
   <article>
     {{ content }}
   </article>

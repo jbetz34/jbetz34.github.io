@@ -2,13 +2,12 @@
 layout: post 
 title: "[Repost] Joy of q: It's snowing again"
 author: james
+date: 2022-04-12 00:00 -00:00
 categories: projects
 tags: [kdb+/q, JavaScript]
 image: snow-scape.jpg 
 subtitle: Simulating weather in q/kdb+
 ---
-### **{{page.subtitle}}**
-
 _This post was originally posted in KX Community. You can view that post [here][kxc-post]_
 
 Inspired by a recent post from Stephen Taylor titled Joy of q: Let it snow , I decided to take a shot at my own improvements on the code he developed. I tried to keep the scope small, but as you will see, I might have gotten a little carried away. Even as I write this post, I am trying to resist the urge to go back and add more features to the script. Despite the feature bloat, I was still able to keep the code to just about 50 lines of q. Let me walk you through it...
