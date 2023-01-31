@@ -64,7 +64,7 @@ sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;
 
 If you are thinking that was a softball question, that's because it was. In truth, I didnt want to dive too fast into harder problems because I need to explain the concept of digit promotion. If you watched the embedded video above, the digit promotion in that video occurs at about 2:10. When the numbers in a column add up to 10 or more, the tens digit gets promoted to the next column. 
 
-Knowing the digits on x will always appear in order, we do not have to worry about multiplying each digit by 10<sup>n</sup>. However, to assign the appropriate weight to each digit on the right hand side we need to multiply by 10<sup>n</sup>. While this may resolve one side of the equation, our y variable is still subject to the same limitation as always. Let's look at an example of that:
+Knowing the digits in x will always appear in order, we do not have to worry about multiplying each digit by 10<sup>n</sup>. However, to assign the appropriate weight to each digit on the right hand side we need to multiply by 10<sup>n</sup>. While this may resolve one side of the equation, our y variable is still subject to the same limitation as always. Let's look at an example of that:
 {% highlight q %}
 // our two numbers 3 * 123,123,123,123,123,123,123
 x:3;
@@ -94,7 +94,75 @@ y:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
 1                     * 3
 {% endhighlight %}
 
-We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. 
+We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. 
+
+{% highlight q %}
+x:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
+y:3
+
+// correctly weighting our y variable
+1 * 3
+{% endhighlight %}
+
+To explain a different way, we are breaking up the y variable into parts based on the digit location. 
+
+{% highlight q %}
+// 5 * 121,121
+x:5				
+y:1 2 1 1 2 1
+
+5 * (100000 + 20000 + 1000 + 100 + 20 + 1)
+	->	500000 + 100000 + 5000 + 500 + 100 + 5
+	->	605605
+{% endhighlight q %}
+
+The previous example also gives some insight into how we will tackle the problem of rounding. In two of the numbers in the partial sum, we had to perform digit promotion ("carry the one"). Lets take a look at that example again, but in a more q/kdb+ style to see that promotion a bit more clearly. 
+
+{% highlight q %}
+// 5 * 121,121
+x:5
+y:1 2 1 1 2 1
+
+5 * 1 0 0 0 0 0
+5 *   2 0 0 0 0
+5 *     1 0 0 0
+5 *       1 0 0
+5 *         2 0
+5 *           1
+
+// resolves to
+5 0 0 0 0 0
+ 10 0 0 0 0
+    5 0 0 0
+	  5 0 0
+	   10 0
+	      5
+
+// taking the sum
+5 10 5 5 10 5
+
+// taking the div[;10]
+p:0 1 0 0 1 0
+
+// multiply p by 10 and subtract
+	5 10 5 5 10 5
+  -	0 10 0 0 10 0	/ (10 * 0 1 0 0 1 0)
+
+->  5 0 5 5 0 5
+
+// shifting p to the left and add to previous 
+	0 1 0 0 1 0 0	/ when shift in to left, add zero to the right
+  +   5 0 5 5 0 5
+
+->  0 6 0 5 6 0 5
+
+// cut off leading 0
+6 0 5 6 0 5
+
+{% endhighlight %}
+
+So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. 
+
 
 
 <!-- USELESS JUNK START -->
