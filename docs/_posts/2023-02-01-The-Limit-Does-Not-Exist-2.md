@@ -1,10 +1,11 @@
 ---
 layout: post
-author: james
-date: 2022-11-07 16:21:00 -05:00
-image: the-mean-girls-lindsay-lohan.gif
+author: James
+date: 2023-01-30 11:21:00 -05:00
+image: lindsay-lohan-static.jpg
 title: The limit does not exist
 subtitle: Going beyond the native 64bit math in q/kdb+
+tags: [kdb+, q, math]
 ---
 Native math in q/kdb+ is limited by the maximum size of the resultant number's datatype. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint","int64" or "long long", all referring to the same 8 byte numerical datatype. The limit on native numerical calculations q/kdb+ is only 8 bytes of data, that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806.
 
@@ -31,20 +32,21 @@ If you're thinking, "why not just do it in python?", <a href="https://www.python
 
 Now that it's just us serious programmers, let's talk about what we need to do to bypass this limit. 
 
+#### Our First Attempt: Partial Products
 First, we need a way to represent numbers larger than ~9 quintillion. While there may be several solutions to representing large numbers in an abstract way, I think the most straightforward and human-readable would be to represent each digit in the number as a single number in a vector of longs. In this way, the maximum numerical value of a long would be represented "9 2 2 3 3 7 2 0 3 6 8 5 4 7 7 5 8 0 6". 
 Great, now in code: 
-{% highlight q %}
+``` q
 // accepts a number,string or list of numbers
 // converts to list of longs
 vec:{"J"$/:string x}
-{% endhighlight %}
+```
 
 So we now have our numbers, or more correctly, our lists of numbers. How do we multiply these numbers together? 
 One of the most common methods of multiplication is called partial products. This method multiplies each digit in one number by each other digit in the second number and summing the result. Still confused? Here, watch this video: 
 <p style="text-align:center"><iframe width="560" height="315" src="https://www.youtube.com/embed/EupNW_6jPok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 
 One important thing to note here, is that in partial products we don't consider each digit individually, but rather consider each digit\*10<sup>n</sup> where n is the index of the digit counted from right to left. Because of this we are able to take advantage of the vecorization of one number, but the other must be multiplied by 10<sup>n</sup>. If I am making absolutely no sense, let's look at an example:
-{% highlight q %}
+``` q
 // our two numbers 3 * 121 = 363
 x:3;y:1 2 1;
 
@@ -60,12 +62,12 @@ sum x*/:100 10 1*'y
 
 // generic partial products code
 sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;
-{% endhighlight %}
+```
 
 If you are thinking that was a softball question, that's because it was. In truth, I didnt want to dive too fast into harder problems because I need to explain the concept of digit promotion. If you watched the embedded video above, the digit promotion in that video occurs at about 2:10. When the numbers in a column add up to 10 or more, the tens digit gets promoted to the next column. 
 
 Knowing the digits in x will always appear in order, we do not have to worry about multiplying each digit by 10<sup>n</sup>. However, to assign the appropriate weight to each digit on the right hand side we need to multiply by 10<sup>n</sup>. While this may resolve one side of the equation, our y variable is still subject to the same limitation as always. Let's look at an example of that:
-{% highlight q %}
+``` q
 // our two numbers 3 * 123,123,123,123,123,123,123
 x:3;
 y:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
@@ -92,21 +94,21 @@ y:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
 100                   * 1
 10                    * 2
 1                     * 3
-{% endhighlight %}
+```
 
 We cannot weight our y variable properly, because the largest digits far exceed the size limit for longs in kdb+/q. However, by switching the x and y digits here, we are able to properly calculate the result, because we do not have to weight the x variable. 
 
-{% highlight q %}
+``` q
 x:1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
 y:3
 
 // correctly weighting our y variable
 1 * 3
-{% endhighlight %}
+```
 
 To explain a different way, we are breaking up the y variable into parts based on the digit location. 
 
-{% highlight q %}
+``` q
 // 5 * 121,121
 x:5				
 y:1 2 1 1 2 1
@@ -114,11 +116,11 @@ y:1 2 1 1 2 1
 5 * (100000 + 20000 + 1000 + 100 + 20 + 1)
 	->	500000 + 100000 + 5000 + 500 + 100 + 5
 	->	605605
-{% endhighlight q %}
+```
 
 The previous example also gives some insight into how we will tackle the problem of rounding. In two of the numbers in the partial sum, we had to perform digit promotion ("carry the one"). Lets take a look at that example again, but in a more q/kdb+ style to see that promotion a bit more clearly. 
 
-{% highlight q %}
+``` q
 // 5 * 121,121
 x:5
 y:1 2 1 1 2 1
@@ -158,77 +160,95 @@ p:0 1 0 0 1 0
 
 // cut off leading 0
 6 0 5 6 0 5
+```
 
-{% endhighlight %}
-
-So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. 
-
+If there were any digits in the resulting sum that were greater than or equal to 10, then we would repeat the process until each digit is less than 10. 
 
 
-<!-- USELESS JUNK START -->
+So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. However, this limitation seems a 
 
-INTRO: 
-- Example problem: ‘number error
-- Talk about integers, int32, int64, longs – i.e. their limits
-	C++ version of long is “long long”, 64bit signed. Min/Max numbers specified by 2^63
-- Talk about bignum in python and other languages
-	bignum: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
-- https://code.kx.com/q/basics/math/
-- https://code.kx.com/q/ref/add/
-- https://code.kx.com/q/ref/multiply/
+<!-- INSERT MORE OF A TRANSITION HERE -->
 
-- Talk about the objective/scope (bignum in q, mult,add,pwr, no negatives/fractions)
+Lets take a different approach. 
 
-In mathematics, an integer is any whole number within the range of all negative and positive numbers including zero. It exists as an unbounded set with equal magnitude on both the positive and negative side. In computing, this is not so easy to achieve. On your computer, numbers are stored as binary digits, or bits, and take up space in memory. Since your computer only has so much memory, the number you create can only be so large. For type casted programming languages such as q/kdb+, the size of a number is even more limited. In the case of a long datatype in q/kdb+, a number is limited to 8bytes or 64bits.
-While q/kdb+ is super fast with complex vector calculations, it has its limitations. Mainly, the ability to exceed 9,223,372,036,854,775,806 in either direction. 1 more beyond and you reach negative and positive infinity. 2 more beyond and you reach a null. 3+ more beyond and you will start to loop back down in the opposite direction. It should be noted that nulls are “sticky”, meaning that the null will override any math you intend to perform. 
-The numerical value in q/kdb+ (since V3.0) is a long datatype, a signed 64bit integer. With the first digit representing the sign (positive or negative), that leaves 63 bits to determine the size of the number. The limit can then be calculated as [-263 , 263 -1]
-There are other programming languages that have determined a way around this limitation, such as python. Bignum arithmetic in python allows numbers to expand to any magnitude that can be contained in memory. More information can be found here: https://levelup.gitconnected.com/how-python-represents-integers-using-bignum-f8f0574d0d6b
-The objective of this exploratory paper is to achieve mathematics to a reasonable limit beyond that which is available by default means. If possible, it would be a nice achievement to calculate a googol (10100) or dare I even say, a googolplex (10googol). Not all mathematical operations will be included in this scope, fractions and negative numbers will not be addressed. 
+#### A Reimagined Attempt: Matrices
+If you are having nightmarish flashbacks to highschool/college, I am sorry, but we must persist. For a quick refresher on matrix multiplication, khan academy has a pretty good video on it [here][mmu-video]
 
-<!-- USELESS JUNK END -->
+The main concept of matrix multiplication is described in the image below: ![mmu-image](assets/img/mmu-example.png)
+The resulting digit in the first row and first column is the dot product of the first row of the first matrix and the first column of the second matrix. Similarly, the resulting digit in the first row and second column is the dot product of the first row of the first matrix and the second column of the second matrix. This is continued for each row/column until the resulting matrix is formed. 
 
-I
+One cool special case in matrix multiplication is the identity matrix. It is a square matrix that when multiplied by a second matrix, will return the second matrix. Lets see an example:
+``` q 
+(1 2 3)	  x	(1 0 0)    =	(1 2 3)
+(4 5 6)		(0 1 0)	    	(4 5 6)
+    		(0 0 1)
 
+// Breakdown
+1*1+2*0+3*0	1*0+2*1+3*0	1*0+2*0+3*1	->	1 2 3
+4*1+5*0+6*0	4*0+5*1+6*0	4*0+5*0+6*1	->	4 5 6
+```
 
+By multiplying the identity matrix by a scalar, we can achieve the same results as multiplying the original matrix by a scalar
+``` q 
+(1 2 3)	  x	(1 0 0)	x 2
+(4 5 6)		(0 1 0)	    
+    		(0 0 1)
 
+OR
 
-CONTENT:
-- Break down the subcomponents of multiplication/addition
-- Walk through each step and how you programmed for it
+(1 2 3)	  x	(2 0 0)    =	(2  4  6)
+(4 5 6)		(0 2 0)	    	(8 10 12)
+    		(0 0 2)
 
-To begin to understand how to approach this problem, it will make sense to examine how addition and multiplication is calculated by hand. In addition, each digit is added to the corresponding digit in the second number and any sum over 10 is carried over to the next digit. This process repeats for every digit until both numbers have been added completely. 
-In multiplication, the typical approach taught in U.S. schools would be to use partial multiplication. This involves multiplying one number by each digit of the other number and summing the offset result. Look at this example below:
- 
-What makes these techniques especially appealing is that they only consider one digit at a time from each number when calculating the result. If instead of treating a number as a long we treated it as a list of longs, where each index represented a different digit, we may be able to perform mathematical operations on the list of digits. 
+// Breakdown
+1*2+2*0+3*0	1*0+2*2+3*0	1*0+2*0+3*2	->	2  4  6
+4*2+5*0+6*0	4*0+5*2+6*0	4*0+5*0+6*2	->	8 10 12
+```
 
-Lets break that down for each operation and see how it is performed in q/kdb+. 
+But this scalar would still be subject to the same 8 byte limitation as any number in kdb+, unless...
+``` q 
+(1 2 3)	  x	(1 0 0)	x 315
+(4 5 6)		(0 1 0)	    
+    		(0 0 1)
 
-Preprocessing
-The first step before any calculations can be done is to convert the number from some expected input into an input that we can use. As mentioned before, we are looking to convert a number into a list of digits. The best way to do this would be to cast the number to a string and cast each individual character back to a long. This will handle multiple input types atomic number types, enlisted number types and numerical strings. To handle this action the function vec can be used to vectorize the input. 
-Provide code evidence here
+OR
 
+(1 2 3)	  x	(3 1 5 0 0)    =	( 3  7 16 13 15)
+(4 5 6)		(0 3 1 5 0)	    	(12 19 43 31 30)
+    		(0 0 3 1 5)
+```
 
+Wow, lets take a closer look at that example. This time we will focus on the top row of our first matrix. 
+``` q 
+(1 2 3)	  x	(1 0 0)	x 315
+    		(0 1 0)	    
+    		(0 0 1)
 
+OR
 
-ADD
-Subcomponents:
-Vectorize- 
-align digits
-sum/carry
+(1 2 3)	  x	(3 1 5 0 0)    =	( 3  7 16 13 15)
+    		(0 3 1 5 0)	    	
+    		(0 0 3 1 5)
 
-MULTIPLY
-Subcomponents:
-Vectorize-
-Create partial sums
-align digits
-sum/carry
+// Using our previously discussed rounding method
+( 3  7 16 13 15) -> 3 8 7 4 5
 
-BONUS:: POWER
-multiply over y take x
+// Why is this significant? 
+123 * 315 = 38745			
+```
 
+Incredible. By replacing the 1s in our identity matrix with the vectorized representation of our scalar number, we are able to achieve a vectorized representation of the result. What's better is that at no point were we multiplying numbers greater than 10. With this method we have completely eliminated any 8 byte number limitations, our only limitation now is the size of the multiplication matrix. That limit is a bit more difficult, but it is at least restrained by the internal kdb+/q list limit of 2 illion items in a list. 
 
-CONCLUSION:
-- all for fun
-- google can’t even do this shit
-- possible future improvements
+Before we get too carried away with the math of it all, lets get all this to work in code. 
+``` q
+// mmu function requires floats instead of longs
+vec:{"F"$/:string x}
 
+mult2:{[x;y]
+	m:vec[y] mmu c (rotate[-1]@)\vec[x],(c:-1+count vec y)#0f;
+	while[any 9<m;m:(0^next p)+m-10*p:div[;10]m:0f,m];
+	(?[;1b]"b"$m)_m
+}
+```
+
+[mmu-video]: https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/v/matrix-multiplication-intro

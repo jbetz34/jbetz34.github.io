@@ -1,7 +1,7 @@
 ---
 layout: post 
 title: "[Repost] Joy of q: It's snowing again"
-author: james
+author: James
 date: 2022-04-12 00:00 -00:00
 categories: projects
 tags: [kdb+/q, JavaScript]
@@ -18,7 +18,7 @@ After watching Stephen's videos of the snow falling, I couldn't help but hear hi
 
 <ins>Meta Tag Refresh</ins>
 
-{% highlight q %}
+``` q
 / new constants
 RFSH:1b / auto refresh
 RATE:300 / static refresh rate (ms)
@@ -26,7 +26,7 @@ RATE:300 / static refresh rate (ms)
 autoRefresh:{ssr[x;"<head><style>";"<head><meta http-equiv='refresh' content='",string[.001*RATE],"'><style>"] }
 / updated callback
 .z.ph:{$[RFSH;autoRefresh;(::)] .h.hp disp Flakes::advance Flakes}
-{% endhighlight %}
+```
 
 By using a string search and replace function, we are able to squeeze our meta tag into the response just before it gets sent back to the browser. This produces a nice snow fall effect without the need for clicking the  refresh button (unless you want to). However, if we don't mind a little bit of front-end development, we are capable of so much more. 
 
@@ -34,7 +34,7 @@ By using a string search and replace function, we are able to squeeze our meta t
 
 Here's a simple HTML script I wrote with JavaScript websockets to connect to a q process on port 5455:
 
-{% highlight html %}
+``` html
 <!doctype html>
 <html>
 <head>
@@ -61,11 +61,11 @@ function printSnow(n) {
 <pre id='sky'></pre>
 </head>
 </html>
-{% endhighlight %}
+```
 
 and the corresponding q code:
 
-{% highlight q %}
+``` q
 / new functions
 .z.ws:{
   h::neg .z.w;
@@ -73,7 +73,7 @@ and the corresponding q code:
 .z.ts:{
   @[h;;{:system"t 0"}] raze ,\:[;.h.br]disp Flakes::advance Flakes;
   system"t ",string[RATE]; }
-{% endhighlight %}
+```
 
 A keen reader might have noticed that we changed the background color to black and text color to white; snow is white after all. The html script will attempt to open a websocket connection to our q process on port 5455 and if it is successful, it will send the console window size back to the q process (this will be used later). Once the q process receives the connection, it will save the handle and call the timer function. The timer function will set its own rate on every call, we will see why shortly. 
 
@@ -83,7 +83,7 @@ Now that we have our HTML script and our meta tag added, we can access this snow
 
 The weather is constantly changing, as we all know, but the snow.q script as it exists now doesn't seem to change much. The snow is generating and falling randomly, but it always falls to the right, with the same snowflake density and just about the same pace. This is a result of the constant WIND, FALL and RATE variables that we assigned earlier. We can add a bit of movement in these dimensions by adjusting these variables as a function of time. 
 
-{% highlight q %}
+``` q
 / new constants
 BORING:0b
 / new globals
@@ -105,7 +105,7 @@ srate:{sin 6.283185*x%100000} / moving rate -1. thru 1. every 100 sec
 getRRate:{:R::string x*RFSH*$[BORING;RATE;mrate .z.t]} / dynamic refresh rate as product of x
 getWind:{:W::first (-.5+1?1f)+$[BORING;WIND;srate[.z.t]+.005*mrate[.z.t]-270]} / dynamic wind + gust
 getFall:{:F::$[BORING;FALL;first 0|7h$(-1+1?2.)+10*1+srate .z.t]} / dynamic fall rate
-{% endhighlight %}
+```
 
 Now we can see why the timer function sets its own rate. After each .z.ts[] call the timer rate is updated with the new, dynamic refresh rate. This will automatically change the speed in which the snow falls as a factor of time. Each dynamic rate (WIND, FALL and RATE) follows some variation of a sinusoidal function with various amounts of noise added. Due to the randomness and time-dependence built into each dynamic function, it is necessary to store the most recent value in a global variable so that it can be accurately displayed at any point during operation. Whether you are debugging your code, or just casually watching your dynamic snow, you may become curious about the numbers behind it. So next we will build a way to nicely display those numbers on screen. 
 
@@ -113,7 +113,7 @@ Now we can see why the timer function sets its own rate. After each .z.ts[] call
 
 Generating and displaying stats at the end of our snow text is relatively thanks to the .Q.s function:
  
-{% highlight q %}
+``` q
 / new functions
 sLine:{x,$[STAT;enlist .Q.s genStats[];""]} / display stats on screen
 genStats:{([TIME:1#.z.T]REFRESH:1#RFSH;BORING:1#BORING;FALL:F;WIND:1#7h$100*W;RRATE:1#"I"$R)}
@@ -122,7 +122,7 @@ genStats:{([TIME:1#.z.T]REFRESH:1#RFSH;BORING:1#BORING;FALL:F;WIND:1#7h$100*W;RR
 .z.ts:{
   @[h;;{:system"t 0"}] raze sLine ,\:[;.h.br]disp Flakes::advance Flakes;
   system"t ",getRRate[1]; }
-{% endhighlight %}
+```
 
 Notice how our global variables come in handy here to accurately track the WIND, FALL and REFRESH rates. Although this stat line could be achieved in one line, breaking it up adds a bit of readability. 
 
@@ -132,15 +132,15 @@ At this point, we are nearly done. We can access our snow using 2 different prot
 
 Remember this function from our index.html? 
 
-{% highlight javascript %}
+``` javascript
 ws.onopen=function(e){
         ws.send(`${window.innerHeight},${window.innerWidth}`)
     };
-{% endhighlight %}
+```
 
 It's finally time to put it to use. Here we will parse the string values into corresponding numerical types and base our FRAME shape on those values: 
 
-{% highlight q %}
+``` q
 / new functions
 updFrame:{[h;w] / update FRAME to window size
 	@[;0 1;:;floor (-3+h%15.5;w%8.2)] each `FRAME`RCD;
@@ -150,7 +150,7 @@ updFrame:{[h;w] / update FRAME to window size
   h::neg .z.w;
   updFrame . "J"$","vs x;
   .z.ts[]; } 
-{% endhighlight %}
+```
 
 This is hardly the bulletproof solution that I would like, but it does the trick (on my computer at least 😅). These conversions are based on trial and error with the 10pt verdana font that we use in the body of the index.html document and take into account the 3 lines that are reserved at the end for the stat line. These values may need to be updated for your personal browser if the snow is not displaying the way you would expect. It is also worth noting that while the HTTP method will reflect the changes made to the FRAME, it has no method to call updFrame[] so it will not fit to screen if this is the only protocol you use. 
 
@@ -162,7 +162,8 @@ Video: https://watch.screencastify.com/v/CuB62FFiCTQAkZuECpma
 
 Full Script: (github: https://github.com/jbetz34/qSnow/) 
 
-{% highlight q %}
+
+``` q
 / constants
 FRAME:2#RCD:30 80 5 / rows; columns; depth
 BOUNDS:`r`c`d!0,'RCD-1 / stay within
@@ -213,7 +214,8 @@ updFrame:{[h;w] / update FRAME to window size
 system "S ",string 6h$.01*.z.t
 system "p ",string PORT
 -1 "Listening on ",string PORT;
-{% endhighlight %}
+```
+
 
  Thanks for reading 😀 
 What other snow features can you think to add? 

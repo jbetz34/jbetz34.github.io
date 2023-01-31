@@ -1,7 +1,18 @@
 ---
 layout: page
 title: Developer Info
-permalink: /about/devinfo
+permalink: /devinfo
 ---
 
-Millennial is a minimalist Jekyll theme. The purpose of this theme is to provide a simple, clean, content-focused publishing platform for your publication site or blog. You can find everything you need to get started under documentation. For more information on how to install and use this theme, check out [the documentation]({{ site.github.url }}).
+This site is hosted by [GitHub Pages][github-pages] under my personal github account. As a free service provided by github on a platform I was already familiar with, this was a no brainer. 
+For help with the HTML/CSS formatting for this site, I used the open source static site generator Jekyll. 
+As for a theme, I am using the Millennial theme written by [Paul Le][github-millennial]. Finally, I am using 
+
+
+All of this software is shared using the MIT License or offers a zero cost option, which means (with the exception of the domain name) this site is 100% free...<br> 
+And we love that.
+
+
+[github-pages]: https://pages.github.com/
+[github-millennial]: https://github.com/LeNPaul/Millennial
+
