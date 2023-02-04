@@ -7,13 +7,6 @@ title: The limit does not exist
 subtitle: Going beyond the native 64bit math in q/kdb+
 tags: [kdb+, q, math]
 ---
-Native math in q/kdb+ is limited by the maximum size of the resultant number's datatype. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint","int64" or "long long", all referring to the same 8 byte numerical datatype. The limit on native numerical calculations q/kdb+ is only 8 bytes of data, that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806.
-
-_Pathetic._
-
-To top it off, Python has a library "BigNumber" that supports numbers with any values and many operations with them. To admit that a bunch of snake-charmers could out perform our far superior language? *shudders* 
-I will not stand idly by while python runs laps around us. 
-
 If we are the same type of weird you have probably thought to yourself:
 "What is the maximum object size that can be encrypted with the sha-256 hashing algorithm?"
 and quickly ran to google for the answer. If you're not that weird, then I'll save you the trip to google and just tell you. It's 2<sup>63</sup>-1 bytes.
@@ -28,7 +21,12 @@ Kdb?
 ![kdb 2^63](/path/to/image)
 Yikes. 
 
-If you're thinking, "why not just do it in python?", <a href="https://www.python.org">here is the door.</a> 
+Native math functions in q/kdb+ are limited by the maximum size of the number datatypes involved. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint","int64" or "long long", each represents an 8 byte numerical datatype. Therefore the limit on native numerical calculations q/kdb+ is only 8 bytes of data- that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806.
+
+_Pathetic._
+
+To top it off, Python3 natively promotes "int" types to "long" types which can have unlimited length and can perform almost any operation (can't perform any operation that would convert the "long" to a "float"). To admit that a bunch of snake-charmers could out perform our far superior language? *shudders* 
+I will not stand idly by while python runs laps around us. If you're thinking, "why not just do it in python?", <a href="https://www.python.org">here is the door.</a> 
 
 Now that it's just us serious programmers, let's talk about what we need to do to bypass this limit. 
 
@@ -61,7 +59,7 @@ sum x*/:100 10 1*'y
 363
 
 // generic partial products code
-sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;
+reverse sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;
 ```
 
 If you are thinking that was a softball question, that's because it was. In truth, I didnt want to dive too fast into harder problems because I need to explain the concept of digit promotion. If you watched the embedded video above, the digit promotion in that video occurs at about 2:10. When the numbers in a column add up to 10 or more, the tens digit gets promoted to the next column. 
@@ -164,10 +162,18 @@ p:0 1 0 0 1 0
 
 If there were any digits in the resulting sum that were greater than or equal to 10, then we would repeat the process until each digit is less than 10. 
 
+Putting this together with the partial products code that we created above, let's see what we have so far:
+``` q
+vec:{"J"$/:string x}
 
-So essentially we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now. However, this limitation seems a 
+mult:{[x;y]
+	m:reverse sum vec[x]*/:{x*prd each #\:[;10]reverse til count x}vec y;  / partial products
+	while[any 9<m;m:(0^next p)+m-10*p:div[;10]m:0f,m];  / digit promotion 
+	(?[;1b]"b"$m)_m  / cut off leading 0
+	}
+```
 
-<!-- INSERT MORE OF A TRANSITION HERE -->
+Finally, we have created a method to multiply 1 large number (size dependent on memory and billion list limit) and 1 8-byte number. This would solve 99.999% of practical math problems, heck we can even get the answer to 2<sup>64</sup> right now (using the `over` iterator and `64#2`). Unfortunately, this doesn't even come close to what python is capabale of; unfortunately for python, this doesn't even come close to the craziest solution I can think of. 
 
 Lets take a different approach. 
 
@@ -237,7 +243,7 @@ OR
 123 * 315 = 38745			
 ```
 
-Incredible. By replacing the 1s in our identity matrix with the vectorized representation of our scalar number, we are able to achieve a vectorized representation of the result. What's better is that at no point were we multiplying numbers greater than 10. With this method we have completely eliminated any 8 byte number limitations, our only limitation now is the size of the multiplication matrix. That limit is a bit more difficult, but it is at least restrained by the internal kdb+/q list limit of 2 illion items in a list. 
+Incredible. By replacing the 1s in our identity matrix with the vectorized representation of our scalar number, we are able to achieve a vectorized representation of the result. What's better is that at no point were we multiplying numbers greater than 10. With this method we have completely eliminated any 8 byte number limitations, our only limitation now is the size of the multiplication matrix. That limit is a bit more difficult, but it is at least restrained by the internal kdb+/q list limit of 2<sup>64</sup>-1 in q3.* or 2 billion in q2.*
 
 Before we get too carried away with the math of it all, lets get all this to work in code. 
 ``` q
@@ -245,10 +251,55 @@ Before we get too carried away with the math of it all, lets get all this to wor
 vec:{"F"$/:string x}
 
 mult2:{[x;y]
-	m:vec[y] mmu c (rotate[-1]@)\vec[x],(c:-1+count vec y)#0f;
-	while[any 9<m;m:(0^next p)+m-10*p:div[;10]m:0f,m];
-	(?[;1b]"b"$m)_m
+	m:vec[y] mmu c (rotate[-1]@)\vec[x],(c:-1+count vec y)#0f;  / matrix multiplication
+	while[any 9<m;m:(0^next p)+m-10*p:div[;10]m:0f,m];  / digit promotion
+	(?[;1b]"b"$m)_m  / cut off leading zero
 }
 ```
+
+If you are reading this code and thinking: "Hey James, wouldn't `sum vec[y] * ...` do the same thing as `vec[y] mmu ...`?" <br>
+Then I am quite impressed. Yes it will, but for reasons that are well above my understanding, `mmu` is faster and consumes less memory in just about every case.
+
+If you are reading this code and thinking: "Oh yes, I understand why `vec[y] mmu ...` is faster than `sum vec[y] * ...` in this situation." <br>
+Then please share your wisdom with me. @Arthur_Whitney my DM's are wide open.
+
+If you are reading this code and thinking: "I don't understand anything that I am looking at."<br>
+You're starting to sound like a kdb engineer already. 
+
+But we are not quite optimized yet, there is still more to be gained in the digit representation.
+
+#### Maximizing Each Digit
+
+Each digit in our vectorized representation of these numbers contains 8 bytes, if each digit is 9 or less, we are hardly even using 1 byte of data for each. By increasing our digit base from 10<sup>1</sup> to 10<sup>9</sup> we are able to retain human readability and optimize our operator. With this new base, our maximum digit will be 999999999 instead of 9. We keep this well below the maximum size of a long to allow native math operations on each digit, otherwise our `mmu` would break down.
+
+The hardest part of this is converting our `vec` function. This is because we can no longer treat each character in the string as a digit, we need to concatenate strings at specified intervals. Initially, you might think to group the first 9 characters together, then the next 9 and so forth. However, when then number of characters is not a factor of 9, this method will incorrectly leave less than 9 characters in the final digit. Let's see an example using 2 characters at a time instead of 9: 
+
+``` q
+// 12345 * 51 = 629595
+x:12345
+y:51
+
+vec:{"F"$/:(0N,x)#string y}[2]
+// vec[x] -> 12 3f
+// vec[y] -> 51f
+
+// matrix multiplication
+m:vec[y] mmu c (rotate[-1]@)\vec[x],(c:-1+count vec y)#0f;
+// 51f * 12 34 5f -> 612 1734 255f
+
+// digit promotion
+while[any 9<m;m:(0^next p)+m-10*p:div[;10]m:0f,m]; 
+// 0 7 8 7 9 5f
+```
+
+It might be possible to adjust our digit promotion function to accomodate this format, but I think the much easier solution would be to adjust how we group our number characters. In cases where the number of characters is not a factor of 9 (or whatever number we specify), then we will add zero characters to the front of the string until it is. 
+
+``` q
+rt:{(0N,x)##[(x*ceiling count[y]%x)-count y;"0"],y}  / reverse "take"
+vx:{"F"$/:rt[x] raze string y}  / vectorize in x sized groups
+```
+
+
+
 
 [mmu-video]: https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:multiplying-matrices-by-matrices/v/matrix-multiplication-intro
