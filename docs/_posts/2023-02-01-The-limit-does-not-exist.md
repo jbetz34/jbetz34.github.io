@@ -16,7 +16,7 @@ Let's check it out in q/kdb+:
 ![kdb 2^63](assets/img/q-math-large.png)
 Yikes. 
 
-Native math functions in q/kdb+ are limited by the maximum size of the number datatypes involved. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint", "int64" or "long long", each represents an 8 byte numerical datatype. Therefore the limit on native numerical calculations q/kdb+ is only 8 bytes of data - that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can acurately calculate is 9,223,372,036,854,775,806. The top two numbers (...807 and ...808) are reserved for 0W and 0N respectively. 
+Native math functions in q/kdb+ are limited by the maximum size of the number datatypes involved. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint", "int64" or "long long", each represents an 8 byte numerical datatype. Therefore the limit on native numerical calculations q/kdb+ is only 8 bytes of data - that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can accurately calculate is 9,223,372,036,854,775,806. The top two numbers (...807 and ...808) are reserved for 0W and 0N respectively. 
 
 Pathetic.
 
@@ -368,7 +368,7 @@ Is it cheating if 90% of it is written in k? Absolutely not. I make the rules.
 
 #### Conclusion
 
-We went over a lot in this post, partial products, matrix multiplication and lots of q code. In the end, we were able to write a function that is capable of acurately multiplying 2 numbers well beyond the 64 bit limit in q/kdb+. If you want to see all the code we went over today, you can check it out in my github gists [here][gh-bigmath]. 
+We went over a lot in this post, partial products, matrix multiplication and lots of q code. In the end, we were able to write a function that is capable of accurately multiplying 2 numbers well beyond the 64 bit limit in q/kdb+. If you want to see all the code we went over today, you can check it out in my github gists [here][gh-bigmath]. 
 
 Although the infinite math available in python was not my inspiration for this post, we did loosely follow the same steps as the developers for python (convert number to list, maximize the size of each list item, etc.). However, python uses the Karatsuba algorithm for multiplication instead of our matrix multiplication, and they are able to store up to 32 bytes in each list item. If you want to read more about how python supports unlimited data in their number types, you can read this [article][python-supernums]. Who knows, maybe I will come back later and take another crack at unlocking infinite math in kdb. 
 
