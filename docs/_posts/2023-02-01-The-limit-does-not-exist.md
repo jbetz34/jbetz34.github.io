@@ -1,7 +1,7 @@
 ---
 layout: post
 author: James
-date: 2023-01-30 11:21:00 -05:00
+date: 2023-02-12 11:21:00 -05:00
 image: lindsay-lohan-static.jpg
 title: The limit does not exist
 subtitle: Going beyond the native 64bit math in q/kdb+
