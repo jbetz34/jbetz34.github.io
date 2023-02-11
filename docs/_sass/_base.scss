@@ -42,11 +42,29 @@ body {
   font-family: $base-font-family;
 }
 body img {
-  align: middle;
+  align: middle; 
   margin: 5px auto auto auto;
   display: block;
   max-width: 600px;
+  height: auto;
 }
+/* I have no idea what these media tags do */
+@media (max-width: $container-width) {
+  body img {
+    align: middle;
+    margin: 5px auto 25px;
+    display: block;
+    max-width: 60vw;
+  }
+}  
+@media (max-width: $tablet-width) {
+  body img {
+    align: middle;
+    margin: 5px auto 25px;
+    display: block;
+    max-width: 95vw;
+  }
+}  
 
 p {
   display: block;
@@ -120,3 +138,29 @@ th, td {
   padding: 15px;
   text-align: left;
 }
+
+/*
+  Videos
+ */
+.videos, .videos iframe {
+  align: middle;
+  margin: 5px auto 25px;
+  max-width: 600px;
+  height: 315px;
+}
+@media (max-width: $container-width) {
+  .videos, .videos iframe {
+    align: middle;
+    margin: 5px auto 25px;
+    display: block;
+    max-width: 60vw;
+  }
+}  
+@media (max-width: $tablet-width) {
+  .videos, .videos iframe {
+    align: middle;
+    margin: 5px auto 25px;
+    display: block;
+    max-width: 95vw;
+  }
+}  

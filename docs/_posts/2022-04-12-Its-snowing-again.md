@@ -4,7 +4,7 @@ title: "[Repost] Joy of q: It's snowing again"
 author: James
 date: 2022-04-12 00:00 -00:00
 categories: projects
-tags: [kdb+/q, JavaScript]
+tags: [kdb+, q, JavaScript]
 image: snow-scape.jpg 
 subtitle: Simulating weather in q/kdb+
 ---
