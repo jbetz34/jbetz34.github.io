@@ -158,9 +158,9 @@ This is hardly the bulletproof solution that I would like, but it does the trick
 
 If you have followed along to this point, you will have some pretty realistic snowfall generating on your screen, congratulations. Finally, I think I can say I am satisfied with my snow, there's not much else I can think to add. Is it over engineered? Maybe. But as summer quickly approaches, at least I know I can still bundle up in a warm blanket with a cup of hot chocolate and still watch the snow fall from my computer screen. 
 
-Video: https://watch.screencastify.com/v/CuB62FFiCTQAkZuECpma
+Video: [link][screencastify]
 
-Full Script: (github: https://github.com/jbetz34/qSnow/) 
+Full Script: [link][qSnow] 
 
 
 ``` q
@@ -222,3 +222,5 @@ What other snow features can you think to add?
 
 
 [kxc-post]: https://community.kx.com/t5/General/Joy-of-q-It-s-snowing-again/td-p/12237
+[qSnow]: https://github.com/jbetz34/qSnow/
+[screencastify]: https://watch.screencastify.com/v/CuB62FFiCTQAkZuECpma
