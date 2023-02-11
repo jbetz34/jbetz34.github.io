@@ -246,7 +246,7 @@ OR
 123 * 315 = 38745			
 ```
 
-Incredible. By replacing the 1s in our identity matrix with the vectorized representation of our scalar number, we are able to achieve a vectorized representation of the result. What's better is that at no point aree we multiplying numbers greater than 10. With this method we have completely eliminated any 8 byte number limitations, our only limitation now is the size of the multiplication matrix. That limit is a bit more difficult, but it is at least restrained by the internal kdb+/q list limit of 2<sup>64</sup>-1 in q3.* or 2 billion in q2.*
+Incredible. By replacing the 1s in our identity matrix with the vectorized representation of our scalar number, we are able to achieve a vectorized representation of the result. What's better is that at no point are we multiplying numbers greater than 10. With this method we have completely eliminated any 8 byte number limitations, our only limitation now is the size of the multiplication matrix. That limit is a bit more difficult, but it is at least restrained by the internal kdb+/q list limit of 2<sup>64</sup>-1 in q3.* or 2 billion in q2.*
 
 Before we get too carried away with the math of it all, lets get all this to work in code. 
 ``` q
@@ -349,7 +349,7 @@ wfmt fmtx[9] multx[9] . (x; y)
 
 #### A Special Bonus: For Python Devs
 
-If you aren't familiar with the q/kdb+ language and have made it this far, congratulations. This isn't an easy lanuguage to understand at first and it's not fun to read either. Writing and understanding a complex string of numbers and special characters can feel like a super power to many qbies, hence why we call those with that super power 'q gods'. And with great power, comes great responsibility. Mainly, to write clear, understandable code that it is easily maintainable. I say to hell with that responsibility, let's write something ungodly. Something dense and so confusing that python devs have no choice but to stop reading. 
+If you aren't familiar with the q/kdb+ language and have made it this far, congratulations. This isn't an easy lanuguage to understand at first and it's not fun to read either. Writing and understanding a complex string of numbers and special characters can feel like a super power to many qbies, hence why we call those with that super power 'q gods'. And with great power, comes great responsibility. Mainly, to write clear, understandable code that it is easily maintainable. I say to hell with that responsibility, let's write something ungodly. Something so dense and so confusing that python devs have no choice but to stop reading. 
 
 Let's rewrite everything without using a single word in the code: &#128520;
 ``` q 
@@ -372,7 +372,7 @@ We went over a lot in this post, partial products, matrix multiplication and lot
 
 Although the infinite math available in python was not my inspiration for this post, we did loosely follow the same steps as the developers for python (convert number to list, maximize the size of each list item, etc.). However, python uses the Karatsuba algorithm for multiplication instead of our matrix multiplication, and they are able to store up to 32 bytes in each list item. If you want to read more about how python supports unlimited data in their number types, you can read this [article][python-supernums]. Who knows, maybe I will come back later and take another crack at unlocking infinite math in kdb. 
 
-If you have any questions, comments, or you think you can write a better multiplication operator, definitely reach out to me using one of my linked accounts or leave a comment (if I ever get those things set up). 
+Thanks for reading, I know math isn't everyone's favorite subject and this post is littered with it. If you have any questions, comments, or you think you can write a better multiplication operator, definitely reach out to me using one of my linked accounts or leave a comment (if I ever get those things set up). 
 
  As for the limit of our new multiply function? Well, you probably will run out of memory before you hit it, but it can hold 9*(2<sup>64</sup>-1) digits. Now if only we had a way to calculate that number... 
 
