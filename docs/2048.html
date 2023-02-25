@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width-devices-width"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
     <title>2048</title>
-    <link rel="stylesheet" href="2048.css"/>
-    <script src="2048.js"></script>
+    <link rel="stylesheet" href="dev.css"/>
+    <script src="dev.js"></script>
 </head>
 <body onload="initialize()">
     <div class="grid-title">
@@ -16,6 +16,19 @@
         </div>
     </div>
     <div class="grid-container">
+        <div id = "win">
+            <div> 
+                <h1>YOU WIN!</h1>
+                <button class = "popup-button" onclick="keepPlaying()">Keep Playing</button>
+                <button class = "popup-button" onclick="initialize()">Play Again</button>
+            </div>
+        </div>
+        <div id = "lose">
+            <div>
+                <h1>You lose :(</h1>
+                <button class = "popup-button" onclick="initialize()">Play Again</button>
+            </div>
+        </div>
         <div class="grid-box">
             <div class="grid-row">
                 <div class="grid-cell">
