@@ -272,6 +272,11 @@ function keepPlaying () {
     document.getElementById("win").style.display = "none"
 }
 
+function changeTheme (theme) {
+    colorTheme = colorDict[theme]
+    render()
+}
+
 // GAME INITIALIZATION
 function initialize () {
     console.log('enter initialize')
