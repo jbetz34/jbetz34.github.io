@@ -60,7 +60,7 @@ let colorDict = {
         4096    :   "#fa2e55",
     }
 };
-let colorTheme = colorDict["standard"];
+let colorTheme = colorDict['standard'];
 let score = 0;
 let win = false;
 
@@ -176,6 +176,7 @@ function generateRandomBlock(grid = gameFrame) {
     });
     index = empty[(Math.floor(Math.random()*empty.length))]
     num = generate2or4(); row = Math.floor(index/4); col = index%4
+    console.log('New Block: ',num,' @ ',row,col)
     grid[row][col] = num
     return grid
 }
@@ -218,10 +219,14 @@ function move (n, grid=gameFrame, test=false) {
     copy = clone(grid)
     for (var i=0; i<4; i++) {
         if (i === n) {
+            console.log('Shifting')
             copy = leftShift( leftCompress( leftShift (copy), test))
         }
+        console.log('Rotating')
         copy = leftRotate(copy)
     }
+    console.log(grid)
+    console.log(copy)
     if (grid.toString() != copy.toString()) {
         grid = generateRandomBlock(copy)
     }
@@ -263,15 +268,13 @@ function endGame (grid) {
     }
 }
 
-// BUTTON FUNCITONS
 function keepPlaying () {
     document.getElementById("win").style.display = "none"
 }
+
 function changeTheme (theme) {
-    if (Object.keys(colorDict).includes(theme.value)) {
-        colorTheme = colorDict[theme.value]
-        render()
-    }
+    colorTheme = colorDict[theme]
+    render()
 }
 
 // GAME INITIALIZATION
