@@ -7,34 +7,23 @@ html, body {
     font: Arial;
 }
 
-@media (max-width: $container-width) {
-  .grid-container {
-    width: 60vw;
-  }
-}
-@media (max-width: $tablet-width) {
-  .grid-container {
-    width: 95vw;
-  }
+.grid-container {    
+  padding-left: 20vw;
+  max-width: 600px;
+  max-height: 600px;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 6px;
 }
 
-.grid-container {    
-    /*justify-self: center;*/
-    padding-left: 20vw;
-    max-width: 600px;
-    max-height: 600px;
-    width: 60vw;
-    height: 60vw;
-    border-radius: 6px;
-    /*max-width: 600px;*/
+@media (max-width: 480px) {
+  .grid-container {
+    width: 95vw;
+    height: 95vw;
+  }
 }
 
 .grid-box {
-    /*background-color: #bbada0;
-    width: 95%;
-    height: 95%;
-    margin: auto;
-    padding-top: 1.5%;*/
     width: 100%;
     height: 100%;
     border: 3px solid #bbada0;
