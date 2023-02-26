@@ -1,6 +1,12 @@
 // 2048 - James Betz
 
 // INITIAL VARIABLES
+let testFrame = [
+    [ 512, 1024, 2048, 4096 ],
+    [ 16, 64, 128, 256 ],
+    [ 8, 16, 32, 32 ],
+    [ 2, 2, 4, 4 ]
+]
 let gameFrame = [
     [ null, null, null, null ],
     [ null, null, null, null ],
@@ -15,50 +21,112 @@ let prevFrame = [
 ];
 let colorDict = {
     "standard"  :   {    // taken from play.2048.co
-        null    :   "rgb(238,228,218, 0.35)",
-        2       :   "#eee4da",
-        4       :   "#eee1c9",
-        8       :   "#f3b27a",
-        16      :   "#f69664",
-        32      :   "#f77c5f",
-        64      :   "#f75f3b",
-        128     :   "#edd073",
-        256     :   "#edcc62",
-        512     :   "#edc950",
-        1024    :   "#edc53f",
-        2048    :   "#edc22e",
-        4096    :   "#3c3a33",
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#eee4da","#776e65"],
+        4       :   ["#eee1c9","#776e65"],
+        8       :   ["#f3b27a","#f9f6f2"],
+        16      :   ["#f69664","#f9f6f2"],
+        32      :   ["#f77c5f","#f9f6f2"],
+        64      :   ["#f75f3b","#f9f6f2"],
+        128     :   ["#edd073","#f9f6f2"],
+        256     :   ["#edcc62","#f9f6f2"],
+        512     :   ["#edc950","#f9f6f2"],
+        1024    :   ["#edc53f","#f9f6f2"],
+        2048    :   ["#edc22e","#f9f6f2"],
+        4096    :   ["#3c3a33","#f9f6f2"],
     },
     "gradient"  :   {
-        null    :   "rgb(238,228,218, 0.35)",
-        2       :   "#d66c5c",
-        4       :   "#de8a50",
-        8       :   "#e7a745",
-        16      :   "#efc539",
-        32      :   "#cbda3e",  
-        64      :   "#9fd24f",
-        128     :   "#72CA60",
-        256     :   "#46c271",
-        512     :   "#3dad8d",
-        1024    :   "#3598aa",
-        2048    :   "#2c83c6",
-        4096    :   "#6528ad",
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#d66c5c","#f9f6f2"],
+        4       :   ["#de8a50","#f9f6f2"],
+        8       :   ["#e7a745","#f9f6f2"],
+        16      :   ["#efc539","#f9f6f2"],
+        32      :   ["#cbda3e","#f9f6f2"],
+        64      :   ["#9fd24f","#f9f6f2"],
+        128     :   ["#72CA60","#f9f6f2"],
+        256     :   ["#46c271","#f9f6f2"],
+        512     :   ["#3dad8d","#f9f6f2"],
+        1024    :   ["#3598aa","#f9f6f2"],
+        2048    :   ["#2c83c6","#f9f6f2"],
+        4096    :   ["#6528ad","#f9f6f2"],
     },
     "palette"  :   {
-        null    :   "rgb(238,228,218, 0.35)",
-        2       :   "#4f8c9d",
-        4       :   "#0df38f",
-        8       :   "#97127b",
-        16      :   "#6eae3d",
-        32      :   "#553a76",
-        64      :   "#8ae1f9",
-        128     :   "#294d46",
-        256     :   "#d6bcf5",
-        512     :   "#0b29d0",
-        1024    :   "#f27ff5",
-        2048    :   "#056e12",
-        4096    :   "#fa2e55",
-    }
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#4f8c9d","#f9f6f2"],
+        4       :   ["#0df38f","#f9f6f2"],
+        8       :   ["#97127b","#f9f6f2"],
+        16      :   ["#6eae3d","#f9f6f2"],
+        32      :   ["#553a76","#f9f6f2"],
+        64      :   ["#8ae1f9","#f9f6f2"],
+        128     :   ["#294d46","#f9f6f2"],
+        256     :   ["#d6bcf5","#f9f6f2"],
+        512     :   ["#0b29d0","#f9f6f2"],
+        1024    :   ["#f27ff5","#f9f6f2"],
+        2048    :   ["#056e12","#f9f6f2"],
+        4096    :   ["#fa2e55","#f9f6f2"],
+    },
+    "salmon-sushi" : {
+        // fonts : { dark: #808080, light: #ffffff }
+        // old color: 
+        null    : ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#e7f2f8","#808080"],
+        4       :   ["#c0e0e9","#808080"],
+        8       :   ["#99ceda","#808080"], 
+        16      :   ["#74bdcb","#ffffff"],  
+        32      :   ["#96b6d9","#ffffff"],
+        64      :   ["#b8afa7","#ffffff"],
+        128     :   ["#daa895","#ffffff"],
+        256     :   ["#ffa384","#ffffff"],
+        512     :   ["#f9b996","#ffffff"],
+        1024    :   ["#f3cfa8","#808080"],
+        2048    :   ["#efe7bc","#808080"],
+        4096    :   ["#b1d2c3","#808080"],
+    },
+    "seabreeze" : {
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#e7f2f8","#7f7f7f"],
+        4       :   ["#d2e8f0","#7f7f7f"],
+        8       :   ["#bddfe8","#7f7f7f"],
+        16      :   ["#a8d5df","#7f7f7f"],
+        32      :   ["#93cbd7","#ffffff"],
+        64      :   ["#7ec2cf","#ffffff"],
+        128     :   ["#81bbc5","#ffffff"],
+        256     :   ["#9ab6b8","#ffffff"],
+        512     :   ["#b3b1ab","#ffffff"],
+        1024    :   ["#ccac9e","#ffffff"],
+        2048    :   ["#e6a891","#ffffff"],
+        4096    :   ["#ebedda","#7f7f7f"],
+    },
+    "school" : {
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#e63946","#e6e6e6"],
+        4       :   ["#e96e74","#e6e6e6"],
+        8       :   ["#eca2a2","#e6e6e6"],
+        16      :   ["#efd7cf","#808080"],
+        32      :   ["#eaf7ec","#808080"],
+        64      :   ["#d6eee7","#808080"],
+        128     :   ["#c3e6e3","#808080"],
+        256     :   ["#afddde","#808080"],
+        512     :   ["#96c9d1","#808080"],
+        1024    :   ["#7bafbf","#808080"],
+        2048    :   ["#6095ae","#e6e6e6"],
+        4096    :   ["#82374f","#e6e6e6"],
+    },
+    "marguerita":   {
+        null    :   ["rgb(238,228,218, 0.35)","#f9f6f2"],
+        2       :   ["#0a7029", "#eff3d9"], // dark: 677227
+        4       :   ["#368422", "#eff3d9"], // light: edf3e9
+        8       :   ["#63981a", "#eff3d9"],
+        16      :   ["#8fac13", "#eff3d9"],
+        32      :   ["#bbc00b", "#535e13"],
+        64      :   ["#e8d404", "#535e13"],
+        128     :   ["#f9de07", "#535e13"],
+        256     :   ["#efde16", "#535e13"],
+        512     :   ["#e5de25", "#535e13"],
+        1024    :   ["#dcdf34", "#535e13"],
+        2048    :   ["#d2df43", "#535e13"],
+        4096    :   ["#73ac81", "#eff3d9"],
+    },
 };
 let colorTheme = colorDict["standard"];
 let score = 0;
@@ -234,12 +302,8 @@ function render () {
     text = document.querySelectorAll(".grid-text")
     grid.forEach(function (e, i){
         text[i].innerText = (e === null) ? "" : e
-        text[i].style.backgroundColor = colorTheme[e]
-        if (colorTheme[e] === "#eee4da" || colorTheme[e] === "#eee1c9") {
-            text[i].style.color = "#776e65"
-        } else {
-            text[i].style.color = "#f9f6f2"
-        }
+        text[i].style.backgroundColor = colorTheme[e][0]
+        text[i].style.color = colorTheme[e][1]
     })
     document.getElementById("score").innerText = "Current Score: "+ score.toString()
     endGame(gameFrame)
@@ -272,6 +336,13 @@ function changeTheme (theme) {
         colorTheme = colorDict[theme.value]
         render()
     }
+}
+
+// TEST FUNCTIONS
+function testTheme (t) {
+    gameFrame = testFrame
+    colorTheme = colorDict[t]
+    render()
 }
 
 // GAME INITIALIZATION
