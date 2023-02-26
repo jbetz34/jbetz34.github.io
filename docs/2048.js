@@ -277,6 +277,7 @@ function changeTheme (theme) {
 // GAME INITIALIZATION
 function initialize () {
     console.log('enter initialize')
+    score = 0
     document.getElementById('win').style.display = "none"
     document.getElementById('lose').style.display = "none"
     gameFrame = [
