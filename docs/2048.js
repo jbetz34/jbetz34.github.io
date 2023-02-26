@@ -310,8 +310,8 @@ function render () {
     endGame(gameFrame)
 }
 
-function undo () {
-    gameFrame = clone(prevFrame)
+function undo (grid=prevFrame) {
+    gameFrame = grid
     render()
 }
 
