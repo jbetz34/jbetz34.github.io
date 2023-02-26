@@ -275,16 +275,16 @@ function leftRotate (grid = gameFrame) {
 
 // SECONDARY MOVE FUNCITONS
 function move (n, grid=gameFrame, test=false) {
-    new = clone(grid)
+    clonedGrid = clone(grid)
     for (var i=0; i<4; i++) {
         if (i === n) {
-            new = leftShift( leftCompress( leftShift (new), test))
+            clonedGrid = leftShift( leftCompress( leftShift (clonedGrid), test))
         }
-        new = leftRotate(new)
+        clonedGrid = leftRotate(clonedGrid)
     }
-    if (grid.toString() != new.toString()) {
+    if (grid.toString() != clonedGrid.toString()) {
         if (!test) { prevFrame = clone(grid) }
-        grid = generateRandomBlock(new)
+        grid = generateRandomBlock(clonedGrid)
     }
     return grid
 }
