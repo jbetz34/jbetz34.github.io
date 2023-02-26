@@ -291,9 +291,9 @@ function move (n, grid=gameFrame, test=false) {
 
 // RENDER GAME FRAME TO HTML
 function render () {
-    grid = gameFrame.flat()    
+    fgameFrame = gameFrame.flat()    
     text = document.querySelectorAll(".grid-text")
-    grid.forEach(function (e, i){
+    fgameFrame.forEach(function (e, i){
         text[i].innerText = (e === null) ? "" : e
         text[i].style.backgroundColor = colorTheme[e][0]
         text[i].style.color = colorTheme[e][1]
@@ -308,10 +308,10 @@ function undo (grid=prevFrame) {
 }
 
 function endGame (grid) {
-    copy = clone(grid)
-    for (var i=0;i<4;i++) { copy = move(i, copy, true) }
+   testcopy = clone(grid)
+    for (var i=0;i<4;i++) { testcopy = move(i, testcopy, true) }
 
-    if (copy.toString() == grid.toString()) {
+    if (testcopy.toString() == grid.toString()) {
         // if the grid is unable to change, you lose
         document.getElementById('lose').style.display = "flex"
     }
