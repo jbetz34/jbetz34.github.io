@@ -164,24 +164,20 @@ function handleTouchMove(evt) {
         // x direction is dominant
         if (xDiff > 0) {  
             // left swipe
-            prevFrame = clone(gameFrame)
             gameFrame = move(0)
             render()
         } else {  
             // right swipe
-            prevFrame = clone(gameFrame)
             gameFrame = move(2)
             render()
         }
     } else {
         if (yDiff > 0) {  
             // up swipe
-            prevFrame = clone(gameFrame)
             gameFrame = move(1)
             render()            
         } else {  
             // down swipe
-            prevFrame = clone(gameFrame)
             gameFrame = move(3)
             render()
         }        
@@ -197,25 +193,21 @@ function checkKey(e) {
     e = e || window.event;
     if (e.keyCode == '38') {    
         // up arrow
-        prevFrame = clone(gameFrame)
         gameFrame = move(1)
         render()
     }
     else if (e.keyCode == '40') {
         // down arrow
-        prevFrame = clone(gameFrame)
         gameFrame = move(3)
         render()
     }
     else if (e.keyCode == '37') {
         // left arrow
-        prevFrame = clone(gameFrame)
         gameFrame = move(0)
         render()
     }
     else if (e.keyCode == '39') {
         // right arrow
-        prevFrame = clone(gameFrame)
         gameFrame = move(2)
         render()
     }
