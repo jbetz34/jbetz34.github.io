@@ -291,6 +291,7 @@ function move (n, grid=gameFrame, test=false) {
         copy = leftRotate(copy)
     }
     if (grid.toString() != copy.toString()) {
+        if (!test) { prevFrame = clone(grid) }
         grid = generateRandomBlock(copy)
     }
     return grid
@@ -307,6 +308,11 @@ function render () {
     })
     document.getElementById("score").innerText = "Current Score: "+ score.toString()
     endGame(gameFrame)
+}
+
+function undo () {
+    gameFrame = clone(prevFrame)
+    render()
 }
 
 function endGame (grid) {
