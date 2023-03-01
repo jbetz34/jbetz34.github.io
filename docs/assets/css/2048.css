@@ -11,11 +11,11 @@ html, body {
 }
 
 .grid-container {    
-    padding-left: 20vw;
-    max-width: 600px;
-    max-height: 600px;
-    width: 60vw;
-    height: 60vw;
+    padding-left: max(20%, 222px);
+    width: min(60vw, 600px);
+    height: min(60vw, 600px);
+    /*width: 60vw;
+    height: 60vw;*/
     border-radius: 6px;
     position: relative;
     margin-bottom: 12px;
@@ -57,7 +57,7 @@ html, body {
 }
 
 #win {
-    display: flex;
+    display: none;
     max-width: 600px;
     max-height: 600px;
     width: 100%;
@@ -101,7 +101,7 @@ html, body {
 
 @media (max-width: 600px) {
     .grid-container {
-        padding-left: 1vw;
+        padding-left: 0px;
         width: 94vw;
         height: 94vw;
         position: relative;

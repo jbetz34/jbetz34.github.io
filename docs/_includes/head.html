@@ -8,23 +8,41 @@
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
+
+  <!-- Basic stylesheet -->
   <link rel="stylesheet" href="{{ site.url }}/assets/css/main.css">
+
+  <!-- Rogue-Ruby highlighter sylesheet-->
   <!-- <link rel="stylesheet" href="{{ site.url }}/assets/css/syntax.css"> -->
   <link rel="stylesheet" href="{{ site.url }}/assets/css/github.css">
+
   <!-- Use Atom -->
   {% feed_meta %}
   <!-- RSS-v2.0
   <link href="{{ site.github.url }}/rss-feed.xml" type="application/rss+xml" rel="alternate" title="{{ site.title }} | {{ site.description }}"/>
   //-->
+
+  <!-- Fonts from Google -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+  
+  <!-- MathJax V3 (https://www.mathjax.org/): disabling until needed -->
+  <!--
   <script type="text/javascript" async
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
   </script>
+  -->
+
   <!-- Google Analytics -->
   {% if jekyll.environment == "production" %}
-  {% include google-analytics.html %}
+    {% include google-analytics.html %}
   {% endif %}
+
   <!-- Use Jekyll SEO plugin -->
   {% seo %}
+
+  <!-- Source custom css & js into head -->
+  {% include custom-css.html %}
+  {% include custom-js.html %}
+
 </head>
