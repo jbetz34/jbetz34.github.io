@@ -1,11 +1,11 @@
 ---
 layout: post 
-title: "[Repost] Joy of q: It's snowing again"
 author: James
 date: 2022-04-12 00:00 -00:00
-categories: projects
+categories: blog
 tags: [kdb+, q, JavaScript]
 image: snow-scape.jpg 
+title: "[Repost] Joy of q: It's snowing again"
 subtitle: Simulating weather in q/kdb+
 ---
 _This post was originally posted in KX Community. You can view that post [here][kxc-post]_

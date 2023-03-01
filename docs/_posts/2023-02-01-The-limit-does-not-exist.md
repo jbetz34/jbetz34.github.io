@@ -2,10 +2,11 @@
 layout: post
 author: James
 date: 2023-02-11 10:20:00 -05:00
+categories: blog
+tags: [kdb+, q, math]
 image: lindsay-lohan-static.jpg
 title: "Math in q: The limit does not exist"
 subtitle: Going beyond the native 64bit math in q/kdb+
-tags: [kdb+, q, math]
 ---
 If we are the same type of weird you have probably thought to yourself:
 "What is the maximum object size that can be encrypted with the sha-256 hashing algorithm?"
@@ -13,7 +14,7 @@ and quickly ran to google for the answer. If you're not that weird, then I'll sa
 Sure, 2<sup>63</sup>-1, but what does that number even look like?
 Let's check it out in q/kdb+: 
 
-![kdb 2^63](assets/img/q-math-large.png)
+![kdb 2^63](/assets/img/q-math-large.png)
 Yikes. 
 
 Native math functions in q/kdb+ are limited by the maximum size of the number datatypes involved. The largest datatype in q/kdb+ is a "long" which is takes 8 bytes of data. In different languages this datatype might be refered to as "bigint", "int64" or "long long", each represents an 8 byte numerical datatype. Therefore the limit on native numerical calculations q/kdb+ is only 8 bytes of data - that feels a bit tight. Given that numbers in q/kdb+ are signed (positive/negative), that means the largest number you can accurately calculate is 9,223,372,036,854,775,806. The top two numbers (...807 and ...808) are reserved for 0W and 0N respectively. 
@@ -183,7 +184,7 @@ Lets take a different approach.
 
 If you are having nightmarish flashbacks to highschool/college, I am sorry, but we must persist. For a quick refresher on matrix multiplication, khan academy has a pretty good video on it [here][mmu-video]
 
-The main concept of matrix multiplication is described in the image below: ![mmu-image](assets/img/mmu-example.png)
+The main concept of matrix multiplication is described in the image below: ![mmu-image](/assets/img/mmu-example.png)
 The resulting digit in the first row and first column is the dot product of the first row of the first matrix and the first column of the second matrix. Similarly, the resulting digit in the first row and second column is the dot product of the first row of the first matrix and the second column of the second matrix. This is continued for each row/column until the resulting matrix is formed. 
 
 One cool special case in matrix multiplication is the identity matrix. It is a square matrix that when multiplied by a second matrix, will return the second matrix. Lets see an example:
@@ -364,7 +365,7 @@ multk:{ {(?[;1b]"b"$x)_x}{(|/)y>(+/)(x-1)(10*)\9}{(1_p,0f)+y-(*/x#10)*p:(_:)%[;(
 
 Is it cheating if 90% of it is written in k? Absolutely not. I make the rules. 
 
-![sparta-kdb](assets/img/this-is-kdb.png)
+![sparta-kdb](/assets/img/this-is-kdb.png)
 
 #### Conclusion
 
