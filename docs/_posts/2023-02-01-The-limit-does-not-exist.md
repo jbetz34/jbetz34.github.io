@@ -7,6 +7,7 @@ tags: [kdb+, q, math]
 image: lindsay-lohan-static.jpg
 title: "Math in q: The limit does not exist"
 subtitle: Going beyond the native 64bit math in q/kdb+
+redirect_from: /The-limit-does-not-exist
 ---
 If we are the same type of weird you have probably thought to yourself:
 "What is the maximum object size that can be encrypted with the sha-256 hashing algorithm?"
