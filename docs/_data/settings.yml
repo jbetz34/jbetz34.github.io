@@ -1,7 +1,12 @@
 # Change 'comments' to true for Disqus comments
-disqus:
-  comments: false
-  disqus_shortname: 'millennial-3'
+#disqus:
+#  comments: false
+#  disqus_shortname: 'millennial-3'
+
+# Comments using github issues
+comments:
+  enabled: true
+  repo: jbetz34/jbetz34.github.io
 
 # If you are not using Google Analytics, please change 'google-ID' to an empty string
 google-ID: 'G-KQ6SQ3H3YP'

@@ -20,13 +20,21 @@ layout: default
   <article>
     {{ content }}
   </article>
+  <!-- include post share content -->
   {% if site.hide_post_share != true %}
     {% include post-share.html %}
   {% endif %}
+
+  <!-- include related posts content -->
   {% if site.hide_related_posts != true %}
     {% include related-posts.html %}
   {% endif %}
-  {% if site.data.settings.disqus.comments %}
-    {% include disqus.html %}
+  
+  <!-- include comments if necessary -->
+  {% if page.comments_id & site.data.settings.comments.enabled %}
+    {% include comments.html issue_id=page.comments_id %}
   {% endif %}
+  <!-- {% if site.data.settings.disqus.comments %}
+    {% include disqus.html %}
+  {% endif %} -->
 </div>
