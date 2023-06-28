@@ -134,7 +134,7 @@ let win = false;
 
 // TOUCH MOVEMENT FOR MOBILE
 document.addEventListener('touchstart', handleTouchStart, false);
-document.addEventListener('touchmove', handleTouchMove, false);
+document.addEventListener('touchend', handleTouchEnd, false);
 
 var xStart = null;
 var yStart = null;
@@ -149,14 +149,14 @@ function handleTouchStart(evt) {
     xStart = firstTouch.clientX;
     yStart = firstTouch.clientY;
 }
-function handleTouchMove(evt) {
-    console.log('enter handleTouchMove')
+function handleTouchEnd(evt) {
+    console.log('enter handleTouchEnd')
     if (!xStart || !yStart) {
         return;
     };
     
-    var xEnd = evt.touches[0].clientX;
-    var yEnd = evt.touches[0].clientY;
+    var xEnd = evt.changedTouches[0].clientX;
+    var yEnd = evt.changedTouches[0].clientY;
     var xDiff = xStart - xEnd;
     var yDiff = yStart - yEnd;
 
