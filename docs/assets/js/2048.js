@@ -133,21 +133,17 @@ let score = 0;
 let win = false;
 
 // TOUCH MOVEMENT FOR MOBILE
-document.addEventListener('touchstart', handleTouchStart, false);
-document.addEventListener('touchend', handleTouchEnd, false);
+const board = document.getElementById('gameboard');
+board.addEventListener('touchstart', handleTouchStart, false);
+board.addEventListener('touchend', handleTouchEnd, false);
 
 var xStart = null;
 var yStart = null;
 
-function getTouches(evt) {
-    console.log('enter getTouches')
-    return evt.touches || evt.originalEvent.touches
-}
 function handleTouchStart(evt) {
     console.log('enter handleTouchStart')
-    const firstTouch = getTouches(evt)[0];
-    xStart = firstTouch.clientX;
-    yStart = firstTouch.clientY;
+    xStart = evt.changedTouches[0].clientX;
+    yStart = evt.changedTouches[0].clientY;
 }
 function handleTouchEnd(evt) {
     console.log('enter handleTouchEnd')
