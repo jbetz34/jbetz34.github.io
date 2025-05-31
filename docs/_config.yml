@@ -23,3 +23,6 @@ collections:
   # Projects collection - various web hosted projects
   projects:
     output: true
+
+url: ""
+baseurl: ""
