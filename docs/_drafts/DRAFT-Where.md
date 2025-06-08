@@ -35,7 +35,7 @@ def where (x: list[int]) -> list[int]:
 ```
 In practice, because of the abundance of q-sql statements and lack of non-boolean arguments to the function, your assumption would hold true 95% of the time. Cue absolute terror when a qbie runs the `where` function over a list of positive integers-
 
-![confused-meme](/assets/img/confused-meme.gif)
+![confused-meme](/assets/img/confused-meme.jpg)
 
 Illusion shattered. Ok, so the `where` function does this wierd thing when you pass a list of integers - noted. If you are like me, you file this info away in the cobwebbed corner of your brain and keep joyfully plugging away with boolean lists. Maybe you even make it seven years without having to think about it ever again, but eventually you come face to face with a `where <int list>` in the wild (probably implemented by some qgod) and now you are responsible for refactoring the code. So let's checkout what the [KX Reference][kx-where] has to say: 
 >Where x is a vector of non-negative integers: returns a vector containing, for each item of x, that number of copies of its index.
